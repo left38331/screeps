@@ -18,20 +18,21 @@ var roleRepair = {
 
         if (creep.memory.repair) {
             const targets = creep.room.find(FIND_STRUCTURES, {
-                filter: object => object.hits < object.hitsMax
-            });
+                filter: object => object.hits < object.hitsMax && object.structureType != STRUCTURE_WALL });
+
+        // && object.structureType != STRUCTURE_RAMPART
 
             targets.sort((a,b) => a.hits - b.hits);
 
             if(targets.length > 0) {
                 if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
+                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: 'red'}});
                 }
             }
         } else {
             var sources = creep.room.find(FIND_SOURCES);
             if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                creep.moveTo(sources[0], {visualizePathStyle: {stroke: 'red'}});
             }
         }
 

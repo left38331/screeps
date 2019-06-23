@@ -1,3 +1,5 @@
+var triggers = require('trigger');
+
 var roleHarvester = {
 
     /** @param {Creep} creep **/
@@ -8,12 +10,31 @@ var roleHarvester = {
             if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
-        }
-        else {
+        } else {
+
+            // triggers.energyTrigger();
+
+            var identifier = triggers.energyTrigger();
+
+
+
+            console.log(identifier);
+
+
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) &&
-                        structure.energy < structure.energyCapacity;
+
+                    var energyParam;
+
+                    if (identifier === 1) {
+                        energyParam = structure.energy < structure.energyCapacity;
+                    } else {
+                        energyParam = (_.sum(structure.store) < structure.storeCapacity);
+                    }
+
+                        return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN || structure.structureType === STRUCTURE_CONTAINER) && energyParam;
+                        // если нужно заполнить контейнер энергией и не только
+                        // (_.sum(structure.store) < structure.storeCapacity);
                 }
             });
             if(targets.length > 0) {
@@ -27,5 +48,7 @@ var roleHarvester = {
         }
     }
 };
+
+
 
 module.exports = roleHarvester;

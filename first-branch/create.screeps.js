@@ -1,10 +1,12 @@
 var createScreeps = {
     options: {
         quantity: {
-            harvesters: 2,
-            upgraders: 3,
-            builders: 2,
-            repairs: 1
+            harvesters: 1,
+            upgraders: 2,
+            builders: 0,
+            repairs: 1,
+            harvesterOrUpgrader: 1,
+            builderOrRepair: 1
         }
     },
 
@@ -15,6 +17,10 @@ var createScreeps = {
             upgraders = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader'),
             builders = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder'),
             repairs = _.filter(Game.creeps, (creep) => creep.memory.role === 'repair'),
+
+            harvesterOrUpgrader = _.filter(Game.creeps, (creep) => creep.memory.role === 'HoU'),
+            builderOrRepair = _.filter(Game.creeps, (creep) => creep.memory.role === 'BoR'),
+
             quantity = self.options.quantity;
 
 
@@ -32,6 +38,14 @@ var createScreeps = {
 
         if (repairs.length < quantity.repairs) {
             self.createSmallCreep('Repair', 'repair');
+        }
+
+        if (harvesterOrUpgrader.length < quantity.harvesterOrUpgrader) {
+            self.createBigCreep('harvesterOrUpgrader', 'HoU');
+        }
+
+        if (builderOrRepair.length < quantity.builderOrRepair) {
+            self.createSmallCreep('builderOrRepair', 'BoR');
         }
 
         if (Game.spawns['s1'].spawning) {
